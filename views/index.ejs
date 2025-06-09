@@ -1,0 +1,277 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div>
+    <form action="/register" method="post">
+        <div class="max-w-md mx-auto p-6 bg-white rounded-2xl shadow-md space-y-4">
+          
+            <input type="text" placeholder="Name" name="name"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          
+            <input type="text" placeholder="Username" name="username"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          
+            <input type="password" placeholder="Password" name="password"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          
+            <input type="email" placeholder="Email" name="email"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          
+            <input type="number" placeholder="Age" name="age"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          
+            <input type="submit" value="Create Account"
+              class="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition duration-200" />
+          </div>
+    </form>
+   </div>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join the Cosmos | Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.12.16/dist/framer-motion.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cosmic: {
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        nebula: {
+                            100: '#f5f3ff',
+                            200: '#ede9fe',
+                            300: '#ddd6fe',
+                            400: '#c4b5fd',
+                            500: '#a78bfa',
+                            600: '#8b5cf6',
+                            700: '#7c3aed',
+                            800: '#6d28d9',
+                            900: '#5b21b6',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-reverse': 'float-reverse 8s ease-in-out infinite',
+                        'pulse-slow': 'pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        'float-reverse': {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            overflow-x: hidden;
+            background-color: #09090b;
+        }
+        #threejs-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #38bdf8 0%, #a78bfa 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .form-card {
+            backdrop-filter: blur(10px);
+            background: rgba(39, 39, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .form-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        }
+        .input-field {
+            background: rgba(24, 24, 27, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            border-color: rgba(56, 189, 248, 0.5);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+        }
+    </style>
+</head>
+<body class="text-white font-sans antialiased min-h-screen flex items-center justify-center p-4">
+
+    <!-- Three.js Background Canvas -->
+    <div id="threejs-bg"></div>
+
+    <!-- Floating Orbs Decoration -->
+    <div class="fixed top-1/4 left-1/4 w-32 h-32 rounded-full bg-blue-500/20 blur-3xl -z-10 animate-[float_8s_ease-in-out_infinite]"></div>
+    <div class="fixed top-3/4 right-1/4 w-48 h-48 rounded-full bg-purple-500/20 blur-3xl -z-10 animate-[float-reverse_10s_ease-in-out_infinite]"></div>
+    <div class="fixed bottom-1/4 right-1/3 w-24 h-24 rounded-full bg-pink-500/20 blur-3xl -z-10 animate-[float_12s_ease-in-out_infinite]"></div>
+
+    <!-- Main Form Container -->
+    <div class="w-full max-w-md z-10"
+        data-framer-animate="{
+            initial: { opacity: 0, y: 20 },
+            animate: { opacity: 1, y: 0 },
+            transition: { duration: 0.8 }
+        }">
+        
+        <!-- Form Card -->
+        <form action="/register" method="post" class="form-card rounded-2xl p-8 space-y-6">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold gradient-text mb-2">Join the Cosmos</h1>
+                <p class="text-zinc-400">Create your interstellar account</p>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-zinc-300 mb-1">Your Name</label>
+                    <input type="text" placeholder="Enter your full name" name="name" required
+                        class="input-field w-full px-4 py-3 rounded-xl text-white placeholder-zinc-500 focus:outline-none" />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-zinc-300 mb-1">Username</label>
+                    <input type="text" placeholder="Choose a username" name="username" required
+                        class="input-field w-full px-4 py-3 rounded-xl text-white placeholder-zinc-500 focus:outline-none" />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-zinc-300 mb-1">Password</label>
+                    <input type="password" placeholder="Create a password" name="password" required
+                        class="input-field w-full px-4 py-3 rounded-xl text-white placeholder-zinc-500 focus:outline-none" />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-zinc-300 mb-1">Email</label>
+                    <input type="email" placeholder="Your email address" name="email" required
+                        class="input-field w-full px-4 py-3 rounded-xl text-white placeholder-zinc-500 focus:outline-none" />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-zinc-300 mb-1">Age</label>
+                    <input type="number" placeholder="Your age" name="age"
+                        class="input-field w-full px-4 py-3 rounded-xl text-white placeholder-zinc-500 focus:outline-none" />
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" 
+                class="relative overflow-hidden w-full bg-gradient-to-r from-cosmic-600 to-nebula-600 text-white font-semibold py-3 rounded-xl hover:shadow-lg hover:shadow-cosmic-500/30 transition-all duration-300 group mt-6">
+                <span class="relative z-10">Begin Cosmic Journey</span>
+                <span class="absolute inset-0 bg-gradient-to-r from-cosmic-500 to-nebula-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+            </button>
+
+            <!-- Footer -->
+            <div class="text-center text-sm text-zinc-500 mt-4">
+                Already have an account? <a href="/login" class="text-cosmic-400 hover:text-cosmic-300 transition">Sign in</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Three.js Background Animation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up Three.js scene
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('threejs-bg').appendChild(renderer.domElement);
+
+            // Create particles
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particleCount = 1500;
+            
+            const posArray = new Float32Array(particleCount * 3);
+            const colorArray = new Float32Array(particleCount * 3);
+            
+            for(let i = 0; i < particleCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 10;
+                colorArray[i] = Math.random();
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+            
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.02,
+                transparent: true,
+                opacity: 0.8,
+                vertexColors: true,
+                blending: THREE.AdditiveBlending
+            });
+            
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+            
+            camera.position.z = 3;
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                particlesMesh.rotation.x += 0.0002;
+                particlesMesh.rotation.y += 0.0003;
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+            
+            // Framer Motion animations
+            if (typeof Motion !== 'undefined') {
+                document.querySelectorAll('[data-framer-animate]').forEach(el => {
+                    const config = JSON.parse(el.getAttribute('data-framer-animate'));
+                    Motion.animate(el, config.animate, {
+                        ...config.transition,
+                        initial: config.initial
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
